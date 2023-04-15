@@ -26,7 +26,7 @@ class PriorityQueue:
             if self.queue[i][1] < self.queue[i + 1][1]:
                 self.queue[i], self.queue[i + 1] = self.queue[i + 1], self.queue[i]
 
-        print(f'Priority Queue Contents: {self.queue}')  # delete later
+        # print(f'Priority Queue Contents: {self.queue}')  # delete later
 
     def dequeue(self):
         """
