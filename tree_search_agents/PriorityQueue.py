@@ -1,5 +1,4 @@
 
-
 class PriorityQueue:
     """
         This class is an implementation of PriorityQueue data structor.
@@ -26,6 +25,8 @@ class PriorityQueue:
         for i in range(len(self.queue) - 2, -1, -1):
             if self.queue[i][1] < self.queue[i + 1][1]:
                 self.queue[i], self.queue[i + 1] = self.queue[i + 1], self.queue[i]
+
+        print(f'Priority Queue Contents: {self.queue}')  # delete later
 
     def dequeue(self):
         """
