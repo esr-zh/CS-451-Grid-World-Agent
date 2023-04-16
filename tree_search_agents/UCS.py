@@ -26,7 +26,9 @@ class UCSAgent(TreeSearchAgent):
         visited = {start_state: 0}
         expansion = []
         path = {}
+        max_queue_size = 0
         while not queue.is_empty():
+            max_queue_size = max(max_queue_size, len(queue.queue))
             current_reward = queue.queue[0][1]
             current_state = queue.dequeue()
             env.set_current_state(current_state)
@@ -37,8 +39,9 @@ class UCSAgent(TreeSearchAgent):
                     current_state = prev_state
                 directions, actions = zip(*expansion)
                 action_list = list(actions)[::-1]
-                expansion_list = list(directions)[::-1]
-                return action_list, current_reward, expansion_list
+                print(f'Max Queue Size: {max_queue_size}')
+                print(f'Max Nodes Visited: {len(visited)}')
+                return action_list, current_reward, list(visited.keys())
             else:
                 for action in range(4):
                     next_state, reward, done = env.move(action)
