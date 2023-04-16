@@ -26,39 +26,33 @@ class AStarAgent(TreeSearchAgent):
         visited = {start_state: 0}
         expansion = []
         path = {}
-        max_queue_size = 0
-        heuristic_list = []
-        current_score = 0
+        total_score = 0
         while not queue.is_empty():
-            max_queue_size = max(max_queue_size, len(queue.queue))
             current_reward = queue.queue[0][1]
             current_state = queue.dequeue()
             env.set_current_state(current_state)
             if current_state in goal_states:
                 while current_state != start_state:
-                    prev_state, action = path[current_state]
-                    expansion.append((current_state, action))
+                    prev_state, action, cost = path[current_state]
+                    expansion.append((current_state, action, cost))
+                    total_score += cost
                     current_state = prev_state
-                directions, actions = zip(*expansion)
+                directions, actions, cost = zip(*expansion)
                 action_list = list(actions)[::-1]
-                print(visited)
-                print(f'Max Queue Size: {max_queue_size}')
-                print(f'Max Nodes Visited: {len(visited)}')
-                return action_list, current_score, list(visited.keys())
+                return action_list, total_score, list(visited.keys())
             else:
                 for action in range(4):
                     next_state, reward, done = env.move(action)
                     env.set_current_state(current_state)
                     if current_state != next_state:
                         cumulative_cost = reward + current_reward
-                        heuristic_list.append(self.get_heuristic(env, next_state, goal_positions=goal_states, heuristic_type='manhattan'))
-                        total_cost = cumulative_cost - heuristic_list[-1]
+                        heuristic_value = self.get_heuristic(env, next_state, goal_positions=goal_states, heuristic_type='manhattan')
+                        total_cost = cumulative_cost - heuristic_value
                         if next_state not in visited or total_cost > visited[next_state]:
                             queue.enqueue(next_state, total_cost)
                             visited[next_state] = cumulative_cost
-                            current_score = reward
                             if next_state not in path:
-                                path[next_state] = (current_state, action)
+                                path[next_state] = (current_state, action, reward)
 
         return [], 0., []
 

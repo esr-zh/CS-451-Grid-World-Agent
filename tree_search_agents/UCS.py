@@ -26,22 +26,20 @@ class UCSAgent(TreeSearchAgent):
         visited = {start_state: 0}
         expansion = []
         path = {}
-        max_queue_size = 0
         while not queue.is_empty():
-            max_queue_size = max(max_queue_size, len(queue.queue))
             current_reward = queue.queue[0][1]
             current_state = queue.dequeue()
             env.set_current_state(current_state)
             if current_state in goal_states:
                 while current_state != start_state:
-                    prev_state, action = path[current_state]
-                    expansion.append((current_state, action))
+                    prev_state, action, cost = path[current_state]
+                    expansion.append((current_state, action, cost))
                     current_state = prev_state
-                directions, actions = zip(*expansion)
+                directions, actions, cost = zip(*expansion)
                 action_list = list(actions)[::-1]
-                print(f'Max Queue Size: {max_queue_size}')
-                print(f'Max Nodes Visited: {len(visited)}')
-                return action_list, current_reward, list(visited.keys())
+                total_score = sum(list(cost))
+                # print(f'Max Nodes Visited: {len(visited)}')
+                return action_list, total_score, list(visited.keys())
             else:
                 for action in range(4):
                     next_state, reward, done = env.move(action)
@@ -52,7 +50,7 @@ class UCSAgent(TreeSearchAgent):
                             queue.enqueue(next_state, cumulative_cost)
                             visited[next_state] = cumulative_cost
                             if next_state not in path:
-                                path[next_state] = (current_state, action)
+                                path[next_state] = (current_state, action, reward)
         return [], 0., []
 
     @property
