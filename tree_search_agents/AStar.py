@@ -46,7 +46,9 @@ class AStarAgent(TreeSearchAgent):
                     env.set_current_state(current_state)
                     if current_state != next_state:
                         cumulative_cost = reward + current_reward
-                        heuristic_value = self.get_heuristic(env, next_state, goal_positions=goal_states,
+                        heuristic_value = self.get_heuristic(env,
+                                                             next_state,
+                                                             goal_positions=goal_states,
                                                              heuristic_type='manhattan')
                         total_cost = cumulative_cost - heuristic_value
                         if next_state not in visited or total_cost > visited[next_state]:
