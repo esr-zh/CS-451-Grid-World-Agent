@@ -23,10 +23,10 @@ class AStarAgent(TreeSearchAgent):
         start_state = env.reset()
         queue.enqueue(start_state, 0)
         goal_states = env.get_goals()
-        visited = {start_state: 0}
-        expansion = []
-        path = {}
-        total_score = 0
+        visited = {start_state: 0}  # stores every node that was visited with its cost (score + heuristic)
+        expansion = []   # stores every node that was expanded in path
+        path = {}   # stores how to retrace the path steps by storing how to get from one path to another
+        total_score = 0   # stores the total cost to end goal
         while not queue.is_empty():
             current_reward = queue.queue[0][1]
             current_state = queue.dequeue()
@@ -46,7 +46,8 @@ class AStarAgent(TreeSearchAgent):
                     env.set_current_state(current_state)
                     if current_state != next_state:
                         cumulative_cost = reward + current_reward
-                        heuristic_value = self.get_heuristic(env, next_state, goal_positions=goal_states, heuristic_type='manhattan')
+                        heuristic_value = self.get_heuristic(env, next_state, goal_positions=goal_states,
+                                                             heuristic_type='manhattan')
                         total_cost = cumulative_cost - heuristic_value
                         if next_state not in visited or total_cost > visited[next_state]:
                             queue.enqueue(next_state, total_cost)
@@ -68,10 +69,9 @@ class AStarAgent(TreeSearchAgent):
         :param kwargs: More parameters
         :return: Heuristic score
         """
-
         current_position = env.to_position(state)
         goal_positions = kwargs.get('goal_positions', [])
-        heuristic_type = kwargs.get('heuristic_type', '')
+        heuristic_type = kwargs.get('heuristic_type', 'manhattan')
         if heuristic_type == 'manhattan':
             min_distance = min(
                 abs(x1 - x2) + abs(y1 - y2)

@@ -23,9 +23,10 @@ class UCSAgent(TreeSearchAgent):
         start_state = env.reset()
         queue.enqueue(start_state, 0)
         goal_states = env.get_goals()
-        visited = {start_state: 0}
-        expansion = []
-        path = {}
+        visited = {start_state: 0}   # stores every node that was visited with its cost (score + heuristic)
+        expansion = []   # stores every node that was expanded in path
+        path = {}   # stores how to retrace the path steps by storing how to get from one path to another
+        total_score = 0   # stores the total cost to end goal
         while not queue.is_empty():
             current_reward = queue.queue[0][1]
             current_state = queue.dequeue()
